@@ -46,8 +46,7 @@ public class JsonReaderTest {
                 playsJsonReader
                     .readJson(new TypeReference<Map<String, Play>>() {
                     });
-            Plays plays = new Plays();
-            plays.setPlays(playList);
+            Plays plays = new Plays(playList);
 
             // then
             assertEquals(hamlet, plays.get(hamletPerformance));
