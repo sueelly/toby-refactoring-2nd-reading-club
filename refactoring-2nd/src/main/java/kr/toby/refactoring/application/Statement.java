@@ -18,8 +18,6 @@ public class Statement {
                 new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
-            int thisAmount = amountFor(performance, plays);
-
             // Add volume credits for each performance
             volumeCredit += Math.max(performance.getAudience() - 30, 0);
 
@@ -29,9 +27,11 @@ public class Statement {
             }
 
             // Print invoice line for this order
-            result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).getName(), thisAmount / 100,
+            result.append(String.format("%s: $%d %d석\n",
+                    playFor(plays, performance).getName(),
+                    amountFor(performance, plays) / 100,
                     performance.getAudience()));
-            totalAmount += thisAmount;
+            totalAmount += amountFor(performance, plays);
         }
         result.append(String.format("총액: $%d\n", totalAmount / 100));
         result.append(String.format("적립 포인트: %d점", volumeCredit));
