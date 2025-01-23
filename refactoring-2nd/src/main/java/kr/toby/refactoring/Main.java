@@ -1,4 +1,4 @@
-package kr.flab;
+package kr.toby.refactoring;
 
 public class Main {
     public static void main(String[] args) {
