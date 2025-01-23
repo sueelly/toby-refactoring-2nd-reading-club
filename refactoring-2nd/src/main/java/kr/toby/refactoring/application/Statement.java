@@ -18,20 +18,18 @@ public class Statement {
                 new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
-            Play play = plays.get(performance);
-
-            int thisAmount = amountFor(performance, play);
+            int thisAmount = amountFor(performance, plays);
 
             // Add volume credits for each performance
             volumeCredit += Math.max(performance.getAudience() - 30, 0);
 
             // Add extra volume credits for every 5 comedy attendees
-            if (play.getType() == Type.COMEDY) {
+            if (playFor(plays, performance).getType() == Type.COMEDY) {
                 volumeCredit += Math.floor(performance.getAudience() / 5);
             }
 
             // Print invoice line for this order
-            result.append(String.format("%s: $%d %d석\n", play.getName(), thisAmount / 100,
+            result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).getName(), thisAmount / 100,
                     performance.getAudience()));
             totalAmount += thisAmount;
         }
@@ -40,11 +38,11 @@ public class Statement {
         return result.toString();
     }
 
-    private int amountFor(Performance performance, Play play) 
-        throws RefactoringException {
+    private int amountFor(Performance performance, Plays plays) 
+            throws RefactoringException {
         int result;
 
-        switch (play.getType()) {
+        switch (playFor(plays, performance).getType()) {
             case TRAGEDY:
                 result = 40000;
                 if (performance.getAudience() > 30) {
@@ -62,5 +60,9 @@ public class Statement {
                 throw new RefactoringException(ResultCode.INVALID_PLAY_TYPE);
         }
         return result;
+    }
+
+    private Play playFor(Plays plays, Performance performance) {
+        return plays.get(performance);
     }
 }
