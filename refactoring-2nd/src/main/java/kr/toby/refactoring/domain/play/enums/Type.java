@@ -1,7 +1,7 @@
 package kr.toby.refactoring.domain.play.enums;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import kr.toby.refactoring.common.exception.RefactoringException;
+import kr.toby.refactoring.common.exception.ResultCode;
 import kr.toby.refactoring.domain.invoice.Performance;
-import kr.toby.refactoring.domain.play.Play;
 import kr.toby.refactoring.application.PerformanceCalculator;
 import kr.toby.refactoring.application.ComedyCalculator;
 import kr.toby.refactoring.application.TragedyCalculator;
@@ -19,16 +20,20 @@ import kr.toby.refactoring.application.TragedyCalculator;
 @RequiredArgsConstructor
 public enum Type {
 
-    TRAGEDY("tragedy", (performance, play) -> new TragedyCalculator(performance, play)),
-    COMEDY("comedy", (performance, play) -> new ComedyCalculator(performance, play)),
+    TRAGEDY("tragedy", (performance) -> new TragedyCalculator(performance)),
+    COMEDY("comedy", (performance) -> new ComedyCalculator(performance)),
     ;
 
     private final String type;
-    private final BiFunction<Performance, Play, PerformanceCalculator> getPerformanceCalculator;
+    private final Function<Performance, PerformanceCalculator> getPerformanceCalculator;
 
     @JsonValue
     public String getType() {
         return type;
+    }
+
+    public PerformanceCalculator getPerformanceCalculator(Performance performance) {
+        return getPerformanceCalculator.apply(performance);
     }
 
     @JsonCreator
@@ -36,6 +41,6 @@ public enum Type {
         return Arrays.stream(Type.values())
             .filter(t -> t.getType().equals(value))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Invalid type: " + value));
+            .orElseThrow(() -> new RefactoringException(ResultCode.INVALID_PLAY_TYPE));
     }
 }

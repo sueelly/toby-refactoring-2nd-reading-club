@@ -9,7 +9,6 @@ import kr.toby.refactoring.domain.invoice.Invoice;
 import kr.toby.refactoring.domain.invoice.Performance;
 import kr.toby.refactoring.domain.play.Play;
 import kr.toby.refactoring.domain.play.Plays;
-import kr.toby.refactoring.domain.play.enums.Type;
 import kr.toby.refactoring.application.PerformanceCalculator;
 
 @AllArgsConstructor
@@ -30,14 +29,16 @@ public class StatementData {
         return plays.get(performance);
     }
 
+    public PerformanceCalculator createPerformanceCalculator(Performance performance) {
+        return playFor(performance).getType().getPerformanceCalculator(performance);
+    }
+
     public int amountFor(Performance performance) throws RefactoringException {
-        return new PerformanceCalculator(performance, playFor(performance))
-                .amountFor();
+        return createPerformanceCalculator(performance).amountFor();
     }
 
     public int volumeCreditFor(Performance performance) {
-        return new PerformanceCalculator(performance, playFor(performance))
-                .volumeCreditFor();
+        return createPerformanceCalculator(performance).volumeCreditFor();
     }
 
     public int totalAmount() throws RefactoringException {
