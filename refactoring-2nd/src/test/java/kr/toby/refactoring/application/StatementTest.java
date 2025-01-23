@@ -1,6 +1,7 @@
 package kr.toby.refactoring.application;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,7 @@ import kr.toby.refactoring.domain.play.Play;
 
 public class StatementTest {
 
-    private Invoice invoice;
+    private List<Invoice> invoices;
     private Plays plays;
 
     @BeforeEach
@@ -29,7 +30,7 @@ public class StatementTest {
 
             String invoiceJson = "src/main/resources/chapter-01/invoice.json";
             JsonReader invoiceJsonReader = new JsonReader(invoiceJson);
-            invoice = invoiceJsonReader.readJson(Invoice.class);
+            invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,6 +40,7 @@ public class StatementTest {
     @DisplayName("Statement 테스트")
     public void statementTest() {
         // given
+        Invoice invoice = invoices.get(0);
         Statement statement = new Statement();
         String expected = "청구내역 (고객명: BigCo)\n" + //
                         "hamlet: $650 55석\n" + //

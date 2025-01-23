@@ -1,6 +1,7 @@
 package kr.toby.refactoring.utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,12 +63,13 @@ public class JsonReaderTest {
     @Test
     public void testInvoice() {
         // given
-        String invoiceJson = "invoice.json";
+        String invoiceJson = "src/main/resources/chapter-01/invoice.json";
         JsonReader invoiceJsonReader = new JsonReader(invoiceJson);
 
         try {
             // when
-            Invoice invoice = invoiceJsonReader.readJson(Invoice.class);
+            List<Invoice> invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
+            Invoice invoice = invoices.get(0);
 
             // then
             assertEquals("BigCo", invoice.getCustomer());
