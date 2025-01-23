@@ -18,20 +18,14 @@ public class Statement {
                 new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
-            // Add volume credits for each performance
-            volumeCredit += Math.max(performance.getAudience() - 30, 0);
-
-            // Add extra volume credits for every 5 comedy attendees
-            if (playFor(plays, performance).getType() == Type.COMEDY) {
-                volumeCredit += Math.floor(performance.getAudience() / 5);
-            }
+            totalAmount += amountFor(performance, plays);
+            volumeCredit += volumeCreditFor(performance, plays);
 
             // Print invoice line for this order
             result.append(String.format("%s: $%d %d석\n",
                     playFor(plays, performance).getName(),
                     amountFor(performance, plays) / 100,
                     performance.getAudience()));
-            totalAmount += amountFor(performance, plays);
         }
         result.append(String.format("총액: $%d\n", totalAmount / 100));
         result.append(String.format("적립 포인트: %d점", volumeCredit));
@@ -64,5 +58,18 @@ public class Statement {
 
     private Play playFor(Plays plays, Performance performance) {
         return plays.get(performance);
+    }
+
+    private int volumeCreditFor(Performance performance, Plays plays) {
+        int result = 0;
+
+        // Add volume credits for each performance
+        result += Math.max(performance.getAudience() - 30, 0);
+
+        // Add extra volume credits for every 5 comedy attendees
+        if (playFor(plays, performance).getType() == Type.COMEDY) {
+            result += Math.floor(performance.getAudience() / 5);
+        }
+        return result;
     }
 }
