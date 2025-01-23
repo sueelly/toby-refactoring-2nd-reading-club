@@ -14,30 +14,14 @@ public class Statement {
             throws RefactoringException {
         int totalAmount = 0;
         int volumeCredit = 0;
-        StringBuilder result = new StringBuilder(
-                String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
+        StringBuilder result =
+                new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
             Play play = plays.get(performance);
-            int thisAmount = 0;
 
-            switch (play.getType()) {
-                case TRAGEDY:
-                    thisAmount = 40000;
-                    if (performance.getAudience() > 30) {
-                        thisAmount += 1000 * (performance.getAudience() - 30);
-                    }
-                    break;
-                case COMEDY:
-                    thisAmount = 30000;
-                    if (performance.getAudience() > 20) {
-                        thisAmount += 10000 + 500 * (performance.getAudience() - 20);
-                    }
-                    thisAmount += 300 * performance.getAudience();
-                    break;
-                default:
-                    throw new RefactoringException(ResultCode.INVALID_PLAY_TYPE);
-            }
+            int thisAmount = amountFor(performance, play);
+
             // Add volume credits for each performance
             volumeCredit += Math.max(performance.getAudience() - 30, 0);
 
@@ -54,5 +38,29 @@ public class Statement {
         result.append(String.format("총액: $%d\n", totalAmount / 100));
         result.append(String.format("적립 포인트: %d점", volumeCredit));
         return result.toString();
+    }
+
+    private int amountFor(Performance performance, Play play) 
+        throws RefactoringException {
+        int thisAmount;
+
+        switch (play.getType()) {
+            case TRAGEDY:
+                thisAmount = 40000;
+                if (performance.getAudience() > 30) {
+                    thisAmount += 1000 * (performance.getAudience() - 30);
+                }
+                break;
+            case COMEDY:
+                thisAmount = 30000;
+                if (performance.getAudience() > 20) {
+                    thisAmount += 10000 + 500 * (performance.getAudience() - 20);
+                }
+                thisAmount += 300 * performance.getAudience();
+                break;
+            default:
+                throw new RefactoringException(ResultCode.INVALID_PLAY_TYPE);
+        }
+        return thisAmount;
     }
 }
