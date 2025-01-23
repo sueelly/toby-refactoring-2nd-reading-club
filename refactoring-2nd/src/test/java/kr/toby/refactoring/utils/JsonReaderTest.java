@@ -37,48 +37,39 @@ public class JsonReaderTest {
 
     @DisplayName("Plays JsonReader Test")
     @Test
-    public void test() {
+    public void test() throws IOException {
         // given 
         String playsJson = "src/main/resources/chapter-01/plays.json";
         JsonReader playsJsonReader = new JsonReader(playsJson);
 
-        try {
-            // when
-            Map<String, Play> playList =
-                playsJsonReader
-                    .readJson(new TypeReference<Map<String, Play>>() {
-                    });
-            Plays plays = new Plays(playList);
+        // when
+        Map<String, Play> playList =
+            playsJsonReader
+                .readJson(new TypeReference<Map<String, Play>>() {
+                });
+        Plays plays = new Plays(playList);
 
-            // then
-            assertEquals(hamlet, plays.get(hamletPerformance));
-            assertEquals(asLike, plays.get(asLikePerformance));
-            assertEquals(othello, plays.get(othelloPerformance));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // then
+        assertEquals(hamlet, plays.get(hamletPerformance));
+        assertEquals(asLike, plays.get(asLikePerformance));
+        assertEquals(othello, plays.get(othelloPerformance));
     }
 
     @DisplayName("Invoice JsonReader Test")
     @Test
-    public void testInvoice() {
+    public void testInvoice() throws IOException {
         // given
         String invoiceJson = "src/main/resources/chapter-01/invoice.json";
         JsonReader invoiceJsonReader = new JsonReader(invoiceJson);
 
-        try {
-            // when
-            List<Invoice> invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
-            Invoice invoice = invoices.get(0);
-
-            // then
-            assertEquals("BigCo", invoice.getCustomer());
-            assertEquals(3, invoice.getPerformances().size());
-            assertEquals(hamletPerformance, invoice.getPerformances().get(0));
-            assertEquals(asLikePerformance, invoice.getPerformances().get(1));
-            assertEquals(othelloPerformance, invoice.getPerformances().get(2));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // when
+        List<Invoice> invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
+        Invoice invoice = invoices.get(0);
+        // then
+        assertEquals("BigCo", invoice.getCustomer());
+        assertEquals(3, invoice.getPerformances().size());
+        assertEquals(hamletPerformance, invoice.getPerformances().get(0));
+        assertEquals(asLikePerformance, invoice.getPerformances().get(1));
+        assertEquals(othelloPerformance, invoice.getPerformances().get(2));
     }
 }

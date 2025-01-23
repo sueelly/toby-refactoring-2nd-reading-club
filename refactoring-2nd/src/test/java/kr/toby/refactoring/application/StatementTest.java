@@ -21,24 +21,20 @@ public class StatementTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        try {
-            Map<String, Play> playMap;
-            String playsJson = "src/main/resources/chapter-01/plays.json";
-            JsonReader playsJsonReader = new JsonReader(playsJson);
-            playMap = playsJsonReader.readJson(new TypeReference<Map<String, Play>>() {});
-            plays = new Plays(playMap);
+        Map<String, Play> playMap;
+        String playsJson = "src/main/resources/chapter-01/plays.json";
+        JsonReader playsJsonReader = new JsonReader(playsJson);
+        playMap = playsJsonReader.readJson(new TypeReference<Map<String, Play>>() {});
+        plays = new Plays(playMap);
 
-            String invoiceJson = "src/main/resources/chapter-01/invoice.json";
-            JsonReader invoiceJsonReader = new JsonReader(invoiceJson);
-            invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String invoiceJson = "src/main/resources/chapter-01/invoice.json";
+        JsonReader invoiceJsonReader = new JsonReader(invoiceJson);
+        invoices = invoiceJsonReader.readJson(new TypeReference<List<Invoice>>() {});
     }
 
     @Test
     @DisplayName("Statement 테스트")
-    public void statementTest() {
+    public void statementTest() throws IOException {
         // given
         Invoice invoice = invoices.get(0);
         Statement statement = new Statement();
