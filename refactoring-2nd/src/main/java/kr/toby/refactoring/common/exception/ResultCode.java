@@ -11,7 +11,7 @@ public enum ResultCode {
     ERROR("Error"),
 
     // Play
-    UNKOWN_PLAY_TYPE("Unknown play type"),
+    INVALID_PLAY_TYPE("Invalid play type"),
     ;
 
     private final String message;
