@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class JsonReader {
 
@@ -22,5 +23,14 @@ public class JsonReader {
             throw new IOException("Json file doesn't exist: " + filePath);
         }
         return objectMapper.readValue(file, valueType);
+    }
+
+    public <T> T readJson(TypeReference<T> typeReference) throws IOException {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            throw new IOException("Json file doesn't exist: " + filePath);
+        }
+        return objectMapper.readValue(file, typeReference);
     }
 }
