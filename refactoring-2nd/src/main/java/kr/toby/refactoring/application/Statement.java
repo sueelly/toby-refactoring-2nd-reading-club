@@ -12,18 +12,40 @@ public class Statement {
 
     public String statement(Invoice invoice, Plays plays) 
             throws RefactoringException {
+        return renderPlainText(invoice, plays);
+    }
+    
+    private String renderPlainText(Invoice invoice, Plays plays) 
+            throws RefactoringException {
         StringBuilder result =
                 new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
             // Print invoice line for this order
-            result.append(String.format("%s: $%d %d석\n",
-                    playFor(plays, performance).getName(),
-                    amountFor(performance, plays) / 100,
-                    performance.getAudience()));
+            result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).getName(),
+                    amountFor(performance, plays) / 100, performance.getAudience()));
         }
         result.append(String.format("총액: $%d\n", totalAmount(invoice, plays)));
         result.append(String.format("적립 포인트: %d점", totalVolumeCredit(invoice, plays)));
+        return result.toString();
+    }
+
+    private String renderHtml(Invoice invoice, Plays plays) {
+        StringBuilder result =
+                new StringBuilder(String.format("<h1>청구내역 (고객명: %s)</h1>\n", invoice.getCustomer()));
+
+        result.append("<table>\n");
+        result.append("<tr><th> 연극 </th> <th> 좌석 수 </th> <th> 금액 </th></tr>\n");
+        for (Performance performance : invoice.getPerformances()) {
+            result.append(String.format("<tr><td> %s </td> <td> %d석 </td> <td> $%d </td></tr>\n",
+                    playFor(plays, performance).getName(), performance.getAudience(),
+                    amountFor(performance, plays) / 100));
+        }
+        result.append(String.format(
+            "<tr><td> 총액 </td> <td> $%d </td> <td> </td></tr>\n", totalAmount(invoice, plays)));
+        result.append(String.format(
+            "<tr><td> 적립 포인트 </td> <td> %d점 </td> <td> </td></tr>\n", totalVolumeCredit(invoice, plays)));
+        result.append("</table>\n");
         return result.toString();
     }
 
