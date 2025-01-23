@@ -12,6 +12,7 @@ import kr.toby.refactoring.domain.invoice.Invoice;
 import kr.toby.refactoring.domain.invoice.Performance;
 import kr.toby.refactoring.domain.play.Play;
 import kr.toby.refactoring.domain.play.Plays;
+import kr.toby.refactoring.domain.play.enums.Type;
 
 public class JsonReaderTest {
 
@@ -25,9 +26,9 @@ public class JsonReaderTest {
 
     @BeforeAll
     public static void setUp() {
-        hamlet = new Play("hamlet", "tragedy");
-        asLike = new Play("As You Like It", "comedy");
-        othello = new Play("Othello", "tragedy");
+        hamlet = new Play("hamlet", Type.TRAGEDY);
+        asLike = new Play("As You Like It", Type.COMEDY);
+        othello = new Play("Othello", Type.TRAGEDY);
         hamletPerformance = new Performance("hamlet", 55);
         asLikePerformance = new Performance("as-like", 35);
         othelloPerformance = new Performance("othello", 40);
