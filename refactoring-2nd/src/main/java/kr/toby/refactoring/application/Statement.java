@@ -12,23 +12,18 @@ public class Statement {
 
     public String statement(Invoice invoice, Plays plays) 
             throws RefactoringException {
-        int totalAmount = 0;
-        int volumeCredit = 0;
         StringBuilder result =
                 new StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.getCustomer()));
 
         for (Performance performance : invoice.getPerformances()) {
-            totalAmount += amountFor(performance, plays);
-            volumeCredit += volumeCreditFor(performance, plays);
-
             // Print invoice line for this order
             result.append(String.format("%s: $%d %d석\n",
                     playFor(plays, performance).getName(),
                     amountFor(performance, plays) / 100,
                     performance.getAudience()));
         }
-        result.append(String.format("총액: $%d\n", totalAmount / 100));
-        result.append(String.format("적립 포인트: %d점", volumeCredit));
+        result.append(String.format("총액: $%d\n", totalAmount(invoice, plays)));
+        result.append(String.format("적립 포인트: %d점", totalVolumeCredit(invoice, plays)));
         return result.toString();
     }
 
@@ -69,6 +64,24 @@ public class Statement {
         // Add extra volume credits for every 5 comedy attendees
         if (playFor(plays, performance).getType() == Type.COMEDY) {
             result += Math.floor(performance.getAudience() / 5);
+        }
+        return result;
+    }
+
+    private int totalAmount(Invoice invoice, Plays plays) throws RefactoringException {
+        int result = 0;
+
+        for (Performance performance : invoice.getPerformances()) {
+            result += amountFor(performance, plays);
+        }
+        return result / 100;
+    }
+
+    private int totalVolumeCredit(Invoice invoice, Plays plays) {
+        int result = 0;
+
+        for (Performance performance : invoice.getPerformances()) {
+            result += volumeCreditFor(performance, plays);
         }
         return result;
     }
